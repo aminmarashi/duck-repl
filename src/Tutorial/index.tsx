@@ -57,7 +57,7 @@ export function Tutorial({ steps, initialStep }: { steps: any[], initialStep: nu
           </Item>
         </Grid>
         <Grid item xs={9}></Grid>
-        <Grid item xs={1}>
+        <Grid item xs={1} margin={1}>
           <Button
             variant="contained"
             onClick={() => reset(activeStep)}
@@ -66,7 +66,7 @@ export function Tutorial({ steps, initialStep }: { steps: any[], initialStep: nu
             reset
           </Button>
         </Grid>
-        <Grid item xs={1}>
+        <Grid item xs={1} margin={1}>
           <Button
             variant="contained"
             onClick={() => test(activeStep)}
