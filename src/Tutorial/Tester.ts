@@ -2,7 +2,7 @@ import { AssertionError } from 'chai';
 import { expect } from 'chai';
 
 export class Tester {
-  constructor(private counter = 0) {}
+  constructor(private counter = 0) { }
   run(code: string) {
     // eslint-disable-next-line
     return Function(`
@@ -15,14 +15,14 @@ export class Tester {
         }
       })
     `)()(
-        (val: any) => {
-          this.counter++;
-          return expect(val);
-        },
-        (error: typeof AssertionError) => console.log(this.counter, error)
+      (val: any) => {
+        this.counter++;
+        return expect(val);
+      },
+      (error: typeof AssertionError) => console.log(this.counter, error)
     )
   }
   reset() {
-      this.counter = 0;
+    this.counter = 0;
   }
 }
