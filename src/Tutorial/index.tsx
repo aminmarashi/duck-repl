@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { CodeEditor } from './CodeEditor';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
+import { Reporter } from './Reporter';
+import { CodeEditor } from './CodeEditor';
 import { Tester } from './Tester';
 import { SideBar } from './SideBar';
 
@@ -15,26 +16,38 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
+const invalidReport = { index: -1, error: Error(), isKnownError: false };
+
 export function Tutorial({ steps, initialStep }: { steps: any[], initialStep: number }) {
   if (initialStep > steps.length) {
     throw Error(`activeStep: ${initialStep} cannot be more than the length of steps`);
   }
   const [activeStep, setActiveStep] = useState(initialStep);
   const [codes, setCodes] = useState(steps.map(s => s.code));
-  const tester = new Tester();
+  const [report, setReport] = useState(invalidReport);
+  const tester = new Tester({ report: setReport });
+
+  function activeStepChanged(activeStep: number) {
+    setReport(invalidReport);
+    setActiveStep(activeStep);
+  }
 
   function test(activeStep: number) {
+    if (activeStep >= codes.length) return;
     tester.run(codes[activeStep]);
     tester.reset();
   }
 
   function updateCodes(code: string, activeStep: number) {
+    if (activeStep >= codes.length) return;
     const newCodes = [...codes];
     newCodes[activeStep] = code;
     setCodes(newCodes);
   }
 
   function reset(activeStep: number) {
+    if (activeStep >= codes.length) return;
+    setReport(invalidReport);
     const code = steps[activeStep].code;
     updateCodes(code, activeStep)
   }
@@ -44,7 +57,7 @@ export function Tutorial({ steps, initialStep }: { steps: any[], initialStep: nu
       <Grid container spacing={2}>
         <Grid item xs={4}>
           <Item>
-            <SideBar steps={steps} activeStep={activeStep} activeStepChanged={setActiveStep} />
+            <SideBar steps={steps} activeStep={activeStep} activeStepChanged={activeStepChanged} />
           </Item>
         </Grid>
         <Grid item xs={8}>
@@ -53,6 +66,13 @@ export function Tutorial({ steps, initialStep }: { steps: any[], initialStep: nu
               activeStep === steps.length
                 ? <div>🎉</div>
                 : <CodeEditor code={codes[activeStep]} onCodeChanged={code => updateCodes(code, activeStep)} />
+            }
+          </Item>
+          <Item>
+            {
+              report !== invalidReport
+                ? <Reporter report={report} steps={steps} />
+                : <></>
             }
           </Item>
         </Grid>
