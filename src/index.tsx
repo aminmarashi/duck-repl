@@ -4,9 +4,17 @@ import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 
+const searchParams = Array.from(new URLSearchParams(window.location.search));
+const page = searchParams.reduce((page: number, param: [string, string]) => {
+  if (param[0] === 'page') {
+    return parseInt(param[1]);
+  }
+  return page;
+}, 1);
+
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <App page={page}/>
   </React.StrictMode>,
   document.getElementById('root')
 );
