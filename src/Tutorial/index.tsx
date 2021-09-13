@@ -16,7 +16,7 @@ const Item = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.secondary,
 }));
 
-const invalidReport = { index: -1, error: Error(), isKnownError: false };
+const invalidReport = { total: 0, failures: [] };
 
 export function Tutorial({ steps, initialStep }: { steps: any[], initialStep: number }) {
   if (initialStep > steps.length) {
@@ -35,7 +35,6 @@ export function Tutorial({ steps, initialStep }: { steps: any[], initialStep: nu
   function test(activeStep: number) {
     if (activeStep >= codes.length) return;
     tester.run(codes[activeStep]);
-    tester.reset();
   }
 
   function updateCodes(code: string, activeStep: number) {

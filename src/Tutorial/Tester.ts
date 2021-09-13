@@ -2,17 +2,17 @@ import { AssertionError } from 'chai';
 import { expect } from 'chai';
 
 export class Tester {
-  private counter = 0;
   private report = console.log;
 
   constructor({ counter, report } : { counter?: number, report?: (...args: any[]) => any }) {
-    this.counter = counter === undefined ? this.counter : counter;
     this.report = report === undefined ? this.report : report;
   }
 
   run(code: string) {
+    const errors: { error: Error, index: number, isKnown: boolean }[] = [];
+    let counter = 0;
     // eslint-disable-next-line
-    return Function(`
+    const result = Function(`
       "use strict";
       return (function test(expect, errorHandler) {
         try {
@@ -23,13 +23,16 @@ export class Tester {
       })
     `)()(
       (val: any) => {
-        this.counter++;
+        counter++;
         return expect(val);
       },
-      (error: Error) => this.report({ index: this.counter, error, isKnownError: error instanceof AssertionError }),
-    )
-  }
-  reset() {
-    this.counter = 0;
+      (error: Error) => {
+        errors.push({ error, index: counter - 1, isKnown: error instanceof AssertionError });
+      },
+    );
+    this.report({
+      total: counter,
+      failures: errors,
+    });
   }
 }
