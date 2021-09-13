@@ -70,7 +70,7 @@ export function Tutorial({ steps, initialStep }: { steps: any[], initialStep: nu
           <Item>
             {
               report !== invalidReport
-                ? <Reporter report={report} steps={steps} />
+                ? <Reporter report={report} hints={steps[activeStep].hints} />
                 : <></>
             }
           </Item>
