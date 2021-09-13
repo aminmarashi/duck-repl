@@ -1,10 +1,13 @@
 import { Tutorial } from './Tutorial';
+import { TutorialEditor } from './TutorialEditor';
 import steps from './steps.json';
 
-function App({page}: {page: number}) {
+function App({page, isEditMode}: {page: number, isEditMode: boolean}) {
   const initialStep = page > 0 && page <= steps.length ? page - 1 : 0;
   return (
-    <Tutorial steps={steps} initialStep={initialStep} />
+    isEditMode
+      ? <TutorialEditor />
+      : <Tutorial steps={steps} initialStep={initialStep} />
   );
 }
 

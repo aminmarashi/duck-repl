@@ -5,16 +5,25 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 const searchParams = Array.from(new URLSearchParams(window.location.search));
-const page = searchParams.reduce((page: number, param: [string, string]) => {
+const options = searchParams.reduce((accumulator, param: [string, string]) => {
   if (param[0] === 'page') {
-    return parseInt(param[1]);
+    return {
+      ...accumulator,
+      page: parseInt(param[1])
+    };
   }
-  return page;
-}, 1);
+  if (param[0] === 'edit') {
+    return {
+      ...accumulator,
+      isEditMode: !!param[1]
+    };
+  }
+  return accumulator
+}, { page: 1, isEditMode: false });
 
 ReactDOM.render(
   <React.StrictMode>
-    <App page={page}/>
+    <App {...options} />
   </React.StrictMode>,
   document.getElementById('root')
 );
