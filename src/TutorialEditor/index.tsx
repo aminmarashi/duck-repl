@@ -8,7 +8,7 @@ import { Reporter } from './Reporter';
 import { CodeEditor } from './CodeEditor';
 import { Tester } from './Tester';
 import { SideBar } from './SideBar';
-import steps from './steps.json';
+import initialSteps from './steps.json';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -21,6 +21,7 @@ const invalidReport = { total: 0, failures: [] };
 
 export function TutorialEditor() {
   const [activeStep, setActiveStep] = useState(0);
+  const [steps, setSteps] = useState(initialSteps)
   const [codes, setCodes] = useState(steps.map(s => s.code));
   const [report, setReport] = useState(invalidReport);
   const tester = new Tester({ report: setReport });
@@ -28,6 +29,12 @@ export function TutorialEditor() {
   function activeStepChanged(activeStep: number) {
     setReport(invalidReport);
     setActiveStep(activeStep);
+  }
+
+  function createStep() {
+    setSteps(steps => [...steps, initialSteps[0]]);
+    setCodes(codes => [...codes, initialSteps[0].code]);
+    setActiveStep(activeStep + 1);
   }
 
   function test(activeStep: number) {
@@ -54,7 +61,7 @@ export function TutorialEditor() {
       <Grid container spacing={2}>
         <Grid item xs={4}>
           <Item>
-            <SideBar steps={steps} activeStep={activeStep} activeStepChanged={activeStepChanged} />
+            <SideBar steps={steps} activeStep={activeStep} activeStepChanged={activeStepChanged} createStep={createStep} />
           </Item>
         </Grid>
         <Grid item xs={8}>

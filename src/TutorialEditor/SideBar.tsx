@@ -6,8 +6,9 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
+import Input from '@mui/material/Input';
 
-export function SideBar({ steps, activeStep, activeStepChanged }: { steps: any[], activeStep: number, activeStepChanged: (activeStep: number) => any }) {
+export function SideBar({ steps, activeStep, activeStepChanged, createStep }: { steps: any[], activeStep: number, activeStepChanged: (activeStep: number) => any, createStep: () => void }) {
   const handleNext = () => {
     activeStepChanged(activeStep + 1);
   };
@@ -27,17 +28,24 @@ export function SideBar({ steps, activeStep, activeStepChanged }: { steps: any[]
           <Step key={step.label}>
             <StepLabel
               optional={
-                index === 2 ? (
+                index === steps.length - 1 ? (
                   <Typography variant="caption">Last step</Typography>
                 ) : null
               }
             >
-              {step.label}
+              <Input value={step.label} />
             </StepLabel>
             <StepContent>
-              <Typography>{step.description}</Typography>
+              <Input value={step.description} />
               <Box sx={{ mb: 2 }}>
                 <div>
+                  <Button
+                    variant="contained"
+                    onClick={createStep}
+                    sx={{ mt: 1, mr: 1 }}
+                  >
+                    +
+                  </Button>
                   <Button
                     variant="contained"
                     onClick={handleNext}
