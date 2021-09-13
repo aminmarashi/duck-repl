@@ -27,7 +27,7 @@ export function SideBar({ steps, activeStep, activeStepChanged }: { steps: any[]
           <Step key={step.label}>
             <StepLabel
               optional={
-                index === 2 ? (
+                index === steps.length - 1 ? (
                   <Typography variant="caption">Last step</Typography>
                 ) : null
               }
