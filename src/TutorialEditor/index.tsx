@@ -98,10 +98,7 @@ export function TutorialEditor() {
     const report = test(true);
     setSteps(steps => {
       const newSteps = [...steps];
-      newSteps[activeStep].hints = [...steps[activeStep].hints];
-      report.failures.forEach((_: any, index: number) => {
-        newSteps[activeStep].hints[index] = `hint #${index}`;
-      });
+      newSteps[activeStep].hints = report.failures.map((_: any, index: number) => `hint #${index}`);
       return newSteps;
     });
     setReport(report);
