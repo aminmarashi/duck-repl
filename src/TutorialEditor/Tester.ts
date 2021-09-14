@@ -12,7 +12,7 @@ export class Tester {
     const errors: { error: Error, index: number, isKnown: boolean }[] = [];
     const getter = {
       get(target: any, key: string) : any {
-        return new Proxy(new Function, getter);
+        return new Proxy(() => {}, getter);
       }
     }
     const fakeExpect = new Proxy({}, getter);
