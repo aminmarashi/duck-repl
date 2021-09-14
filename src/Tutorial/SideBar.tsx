@@ -24,7 +24,7 @@ export function SideBar({ steps, activeStep, activeStepChanged }: { steps: any[]
     <Box sx={{ maxWidth: 400 }}>
       <Stepper activeStep={activeStep} orientation="vertical">
         {steps.map((step, index) => (
-          <Step key={step.label}>
+          <Step key={step.title}>
             <StepLabel
               optional={
                 index === steps.length - 1 ? (
@@ -32,7 +32,7 @@ export function SideBar({ steps, activeStep, activeStepChanged }: { steps: any[]
                 ) : null
               }
             >
-              {step.label}
+              {step.title}
             </StepLabel>
             <StepContent>
               <Typography>{step.description}</Typography>

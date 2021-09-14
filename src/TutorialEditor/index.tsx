@@ -44,6 +44,28 @@ export function TutorialEditor() {
     setActiveStep(steps.length - 2);
   }
 
+  function onTitleChange(title: string) {
+    setSteps(steps => [
+      ...steps.slice(0, activeStep),
+      {
+        ...steps[activeStep],
+        title,
+      },
+      ...steps.slice(activeStep < steps.length - 1 ? activeStep + 1 : steps.length, steps.length),
+    ]);
+  }
+
+  function onDescriptionChange(description: string) {
+    setSteps(steps => [
+      ...steps.slice(0, activeStep),
+      {
+        ...steps[activeStep],
+        description,
+      },
+      ...steps.slice(activeStep < steps.length - 1 ? activeStep + 1 : steps.length, steps.length),
+    ]);
+  }
+
   function test(activeStep: number) {
     if (activeStep >= codes.length) return;
     tester.run(codes[activeStep]);
@@ -68,7 +90,7 @@ export function TutorialEditor() {
       <Grid container spacing={2}>
         <Grid item xs={4}>
           <Item>
-            <SideBar steps={steps} activeStep={activeStep} activeStepChanged={activeStepChanged} createStep={createStep} removeStep={removeStep} />
+            <SideBar steps={steps} activeStep={activeStep} activeStepChanged={activeStepChanged} createStep={createStep} removeStep={removeStep} onTitleChange={onTitleChange} onDescriptionChange={onDescriptionChange} />
           </Item>
         </Grid>
         <Grid item xs={8}>

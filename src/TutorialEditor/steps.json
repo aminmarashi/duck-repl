@@ -1,6 +1,6 @@
 [
   {
-    "label": "Test title",
+    "title": "Test title",
     "description": "This is where you explain your tutorial",
     "code": "console.log('test');\nexpect('test1').eq('test1');\nexpect(true).to.be.ok;",
     "hints": [ "a string equality", "truthy is ok" ]

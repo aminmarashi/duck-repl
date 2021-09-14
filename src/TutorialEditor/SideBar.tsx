@@ -10,7 +10,7 @@ import Input from '@mui/material/Input';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 
-export function SideBar({ steps, activeStep, activeStepChanged, createStep, removeStep }: { steps: any[], activeStep: number, activeStepChanged: (activeStep: number) => any, createStep: () => void, removeStep: () => void }) {
+export function SideBar({ steps, activeStep, activeStepChanged, createStep, removeStep, onTitleChange, onDescriptionChange }: { steps: any[], activeStep: number, activeStepChanged: (activeStep: number) => any, createStep: () => void, removeStep: () => void, onTitleChange: (label: string) => void, onDescriptionChange: (description: string) => void }) {
   const handleNext = () => {
     activeStepChanged(activeStep + 1);
   };
@@ -27,7 +27,7 @@ export function SideBar({ steps, activeStep, activeStepChanged, createStep, remo
     <Box sx={{ maxWidth: 400 }}>
       <Stepper activeStep={activeStep} orientation="vertical">
         {steps.map((step, index) => (
-          <Step key={step.label}>
+          <Step key={step.title}>
             <StepLabel
               optional={
                 index === steps.length - 1 ? (
@@ -35,7 +35,7 @@ export function SideBar({ steps, activeStep, activeStepChanged, createStep, remo
                 ) : null
               }
             >
-              <Input value={step.label} />
+              <Input disabled={activeStep !== index} value={step.title} onChange={e => onTitleChange(e.target.value)}/>
             </StepLabel>
             <StepContent>
               <TextareaAutosize
@@ -43,6 +43,7 @@ export function SideBar({ steps, activeStep, activeStepChanged, createStep, remo
                 minRows={3}
                 value={step.description}
                 style={{ width: 300 }}
+                onChange={e => onDescriptionChange(e.target.value)}
               />
               <Box sx={{ mb: 2 }}>
                 <Button
