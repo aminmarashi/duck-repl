@@ -69,9 +69,9 @@ export function TutorialEditor() {
     ]);
   }
 
-  function test() {
-    if (activeStep >= codes.length) return;
-    tester.run(codes[activeStep]);
+  function test(generateHints = false) : any {
+    if (activeStep >= codes.length) return {};
+    return tester.run(codes[activeStep], generateHints);
   }
 
   function updateCodes(code: string, activeStep: number) {
@@ -82,13 +82,16 @@ export function TutorialEditor() {
   }
 
   function showHints() {
-    const { hints } = steps[activeStep];
-    console.log(activeStep, hints);
-    const errors = hints.map((hint, index) => ({ error: Error('some error'), index, isKnown: true }));
-    setReport({
-      total: hints.length,
-      failures: errors,
+    const report = test(true);
+    setSteps(steps => {
+      const newSteps = [...steps];
+      newSteps[activeStep].hints = [...steps[activeStep].hints];
+      report.failures.forEach((_: any, index: number) => {
+        newSteps[activeStep].hints[index] = `hint #${index}`;
+      });
+      return newSteps;
     });
+    setReport(report);
   }
 
   function updateHints(hint: string, index: number) {

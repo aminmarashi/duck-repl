@@ -8,7 +8,7 @@ export class Tester {
     this.report = report === undefined ? this.report : report;
   }
 
-  run(code: string) {
+  run(code: string, generateHints: boolean) : any {
     const errors: { error: Error, index: number, isKnown: boolean }[] = [];
     let counter = 0;
     // eslint-disable-next-line
@@ -24,12 +24,23 @@ export class Tester {
     `)()(
       (val: any) => {
         counter++;
+        if (generateHints) {
+          errors.push({ error: Error(`failure #${counter}`), index: counter - 1, isKnown: true });
+        }
         return expect(val);
       },
       (error: Error) => {
-        errors.push({ error, index: counter - 1, isKnown: error instanceof AssertionError });
+        if (!generateHints) {
+          errors.push({ error, index: counter - 1, isKnown: error instanceof AssertionError });
+        }
       },
     );
+    if (generateHints) {
+      return {
+        total: counter,
+        failures: errors,
+      };
+    }
     this.report({
       total: counter,
       failures: errors,
