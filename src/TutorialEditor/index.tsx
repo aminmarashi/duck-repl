@@ -34,7 +34,14 @@ export function TutorialEditor() {
   function createStep() {
     setSteps(steps => [...steps, initialSteps[0]]);
     setCodes(codes => [...codes, initialSteps[0].code]);
-    setActiveStep(activeStep + 1);
+    setActiveStep(steps.length);
+  }
+
+  function removeStep() {
+    if (steps.length <= 1) return;
+    setSteps(steps => steps.slice(0, -1));
+    setCodes(codes => codes.slice(0, -1));
+    setActiveStep(steps.length - 2);
   }
 
   function test(activeStep: number) {
@@ -61,7 +68,7 @@ export function TutorialEditor() {
       <Grid container spacing={2}>
         <Grid item xs={4}>
           <Item>
-            <SideBar steps={steps} activeStep={activeStep} activeStepChanged={activeStepChanged} createStep={createStep} />
+            <SideBar steps={steps} activeStep={activeStep} activeStepChanged={activeStepChanged} createStep={createStep} removeStep={removeStep} />
           </Item>
         </Grid>
         <Grid item xs={8}>

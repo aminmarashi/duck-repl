@@ -7,8 +7,10 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Input from '@mui/material/Input';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import TextareaAutosize from '@mui/material/TextareaAutosize';
 
-export function SideBar({ steps, activeStep, activeStepChanged, createStep }: { steps: any[], activeStep: number, activeStepChanged: (activeStep: number) => any, createStep: () => void }) {
+export function SideBar({ steps, activeStep, activeStepChanged, createStep, removeStep }: { steps: any[], activeStep: number, activeStepChanged: (activeStep: number) => any, createStep: () => void, removeStep: () => void }) {
   const handleNext = () => {
     activeStepChanged(activeStep + 1);
   };
@@ -36,31 +38,27 @@ export function SideBar({ steps, activeStep, activeStepChanged, createStep }: { 
               <Input value={step.label} />
             </StepLabel>
             <StepContent>
-              <Input value={step.description} />
+              <TextareaAutosize
+                aria-label="minimum height"
+                minRows={3}
+                value={step.description}
+                style={{ width: 300 }}
+              />
               <Box sx={{ mb: 2 }}>
-                <div>
-                  <Button
-                    variant="contained"
-                    onClick={createStep}
-                    sx={{ mt: 1, mr: 1 }}
-                  >
-                    +
-                  </Button>
-                  <Button
-                    variant="contained"
-                    onClick={handleNext}
-                    sx={{ mt: 1, mr: 1 }}
-                  >
-                    {index === steps.length - 1 ? 'Finish' : 'Continue'}
-                  </Button>
-                  <Button
-                    disabled={index === 0}
-                    onClick={handleBack}
-                    sx={{ mt: 1, mr: 1 }}
-                  >
-                    Back
-                  </Button>
-                </div>
+                <Button
+                  variant="contained"
+                  onClick={handleNext}
+                  sx={{ mt: 1, mr: 1 }}
+                >
+                  {index === steps.length - 1 ? 'Finish' : 'Continue'}
+                </Button>
+                <Button
+                  disabled={index === 0}
+                  onClick={handleBack}
+                  sx={{ mt: 1, mr: 1 }}
+                >
+                  Back
+                </Button>
               </Box>
             </StepContent>
           </Step>
@@ -74,6 +72,12 @@ export function SideBar({ steps, activeStep, activeStepChanged, createStep }: { 
           </Button>
         </Paper>
       )}
+      <Box sx={{ mb: 2 }}>
+        <ButtonGroup variant="outlined" sx={{ mt: 1, mr: 1 }}>
+          <Button onClick={removeStep}> - </Button>
+          <Button onClick={createStep}> + </Button>
+        </ButtonGroup>
+      </Box>
     </Box>
   );
 }
