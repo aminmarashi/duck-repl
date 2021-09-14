@@ -10,6 +10,12 @@ export class Tester {
 
   run(code: string, generateHints: boolean) : any {
     const errors: { error: Error, index: number, isKnown: boolean }[] = [];
+    const getter = {
+      get(target: any, key: string) : any {
+        return new Proxy(new Function, getter);
+      }
+    }
+    const fakeExpect = new Proxy({}, getter);
     let counter = 0;
     // eslint-disable-next-line
     const result = Function(`
@@ -26,6 +32,7 @@ export class Tester {
         counter++;
         if (generateHints) {
           errors.push({ error: Error(`failure #${counter}`), index: counter - 1, isKnown: true });
+          return fakeExpect;
         }
         return expect(val);
       },
