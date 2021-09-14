@@ -9,6 +9,7 @@ import { CodeEditor } from './CodeEditor';
 import { Tester } from './Tester';
 import { SideBar } from './SideBar';
 import initialSteps from './steps.json';
+import { downloadSteps } from './utils';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -66,7 +67,7 @@ export function TutorialEditor() {
     ]);
   }
 
-  function test(activeStep: number) {
+  function test() {
     if (activeStep >= codes.length) return;
     tester.run(codes[activeStep]);
   }
@@ -78,11 +79,23 @@ export function TutorialEditor() {
     setCodes(newCodes);
   }
 
-  function reset(activeStep: number) {
+  function reset() {
     if (activeStep >= codes.length) return;
     setReport(invalidReport);
     const code = steps[activeStep].code;
     updateCodes(code, activeStep)
+  }
+
+  function exportSteps() {
+    const stepsResult: any[] = [];
+    steps.forEach((step, index) => {
+      stepsResult.push({
+        ...step,
+        code: codes[index]
+      });
+    });
+    downloadSteps(stepsResult);
+    console.log(stepsResult);
   }
 
   return (
@@ -109,20 +122,27 @@ export function TutorialEditor() {
             }
           </Item>
         </Grid>
-        <Grid item xs={9}></Grid>
+        <Grid item xs={8}></Grid>
         <Grid item xs={1} margin={1}>
           <Button
             variant="contained"
-            onClick={() => reset(activeStep)}
+            onClick={() => exportSteps()}
+            sx={{ mt: 1, mr: 1 }}
+          >
+            export
+          </Button>
+        </Grid>
+        <Grid item xs={2} margin={1}>
+          <Button
+            variant="contained"
+            onClick={() => reset()}
             sx={{ mt: 1, mr: 1 }}
           >
             reset
           </Button>
-        </Grid>
-        <Grid item xs={1} margin={1}>
           <Button
             variant="contained"
-            onClick={() => test(activeStep)}
+            onClick={() => test()}
             sx={{ mt: 1, mr: 1 }}
           >
             test
