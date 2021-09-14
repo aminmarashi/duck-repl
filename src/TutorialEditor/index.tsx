@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -10,6 +10,7 @@ import { Tester } from './Tester';
 import { SideBar } from './SideBar';
 import initialSteps from './steps.json';
 import { downloadSteps } from './utils';
+import { Database } from './Database';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -26,6 +27,18 @@ export function TutorialEditor() {
   const [codes, setCodes] = useState(steps.map(s => s.code));
   const [report, setReport] = useState<{total: number, failures: any[]}>(invalidReport);
   const tester = new Tester({ report: setReport });
+
+  useEffect(() => {
+    Database.load('steps', setSteps);
+    Database.load('codes', setCodes);
+  }, []);
+
+  useEffect(() => {
+    Database.store('codes', codes);
+  }, [codes])
+  useEffect(() => {
+    Database.store('steps', steps);
+  }, [steps])
 
   function activeStepChanged(activeStep: number) {
     setReport(invalidReport);
