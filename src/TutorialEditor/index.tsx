@@ -24,7 +24,7 @@ export function TutorialEditor() {
   const [activeStep, setActiveStep] = useState(0);
   const [steps, setSteps] = useState(initialSteps)
   const [codes, setCodes] = useState(steps.map(s => s.code));
-  const [report, setReport] = useState(invalidReport);
+  const [report, setReport] = useState<{total: number, failures: any[]}>(invalidReport);
   const tester = new Tester({ report: setReport });
 
   function activeStepChanged(activeStep: number) {
@@ -33,7 +33,9 @@ export function TutorialEditor() {
   }
 
   function createStep() {
-    setSteps(steps => [...steps, initialSteps[0]]);
+    setSteps(steps => [...steps, {
+      ...initialSteps[0]
+    }]);
     setCodes(codes => [...codes, initialSteps[0].code]);
     setActiveStep(steps.length);
   }
@@ -79,11 +81,23 @@ export function TutorialEditor() {
     setCodes(newCodes);
   }
 
-  function reset() {
-    if (activeStep >= codes.length) return;
-    setReport(invalidReport);
-    const code = steps[activeStep].code;
-    updateCodes(code, activeStep)
+  function showHints() {
+    const { hints } = steps[activeStep];
+    console.log(activeStep, hints);
+    const errors = hints.map((hint, index) => ({ error: Error('some error'), index, isKnown: true }));
+    setReport({
+      total: hints.length,
+      failures: errors,
+    });
+  }
+
+  function updateHints(hint: string, index: number) {
+    setSteps(steps => {
+      const newSteps = [...steps];
+      newSteps[activeStep].hints = [...steps[activeStep].hints];
+      newSteps[activeStep].hints[index] = hint;
+      return newSteps;
+    });
   }
 
   function exportSteps() {
@@ -95,7 +109,6 @@ export function TutorialEditor() {
       });
     });
     downloadSteps(stepsResult);
-    console.log(stepsResult);
   }
 
   return (
@@ -117,13 +130,13 @@ export function TutorialEditor() {
           <Item>
             {
               report !== invalidReport
-                ? <Reporter report={report} hints={steps[activeStep].hints} />
+                ? <Reporter report={report} hints={steps[activeStep].hints} onHintChanged={updateHints} />
                 : <></>
             }
           </Item>
         </Grid>
-        <Grid item xs={8}></Grid>
-        <Grid item xs={1} margin={1}>
+        <Grid item xs={6}></Grid>
+        <Grid item xs={2} margin={1}>
           <Button
             variant="contained"
             onClick={() => exportSteps()}
@@ -132,13 +145,13 @@ export function TutorialEditor() {
             export
           </Button>
         </Grid>
-        <Grid item xs={2} margin={1}>
+        <Grid item xs={3} margin={1}>
           <Button
             variant="contained"
-            onClick={() => reset()}
+            onClick={() => showHints()}
             sx={{ mt: 1, mr: 1 }}
           >
-            reset
+            show hints
           </Button>
           <Button
             variant="contained"

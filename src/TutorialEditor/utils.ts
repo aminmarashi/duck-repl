@@ -1,6 +1,7 @@
 export function downloadSteps(obj: any) {
   const filename = 'steps.json';
   const jsonStr = JSON.stringify(obj, null, '  ');
+  console.log(jsonStr);
 
   let element = document.createElement('a');
   element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(jsonStr));

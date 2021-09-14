@@ -1,9 +1,10 @@
 import Alert from '@mui/material/Alert';
 import AlertTitle from '@mui/material/AlertTitle';
 import Stack from '@mui/material/Stack';
+import Input from '@mui/material/Input';
 import { Report } from './types';
 
-export function Reporter({ hints, report }: { hints: string[], report: Report }) {
+export function Reporter({ hints, report, onHintChanged }: { hints: string[], report: Report, onHintChanged: (hint: string, index: number) => void }) {
   const { total, failures } = report;
   const successfulCount = total - failures.length;
   return (
@@ -22,7 +23,7 @@ export function Reporter({ hints, report }: { hints: string[], report: Report })
           isKnown ?
             <Alert key={index} severity="warning">
               < AlertTitle > {`Test ${index + 1} failed`}</AlertTitle>
-              {error.message} — <strong>{hints[index] || 'try again!'}</strong>
+              {error.message} — <strong><Input value={hints[index]} onChange={e => onHintChanged(e.target.value, index)}/></strong>
             </Alert > :
             <Alert key={index} severity="error">
               <AlertTitle>{`${index + 1} Unexpected error`}</AlertTitle>

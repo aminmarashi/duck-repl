@@ -42,7 +42,7 @@ export function SideBar({ steps, activeStep, activeStepChanged, createStep, remo
                 aria-label="minimum height"
                 minRows={3}
                 value={step.description}
-                style={{ width: 300 }}
+                style={{ width: '75%' }}
                 onChange={e => onDescriptionChange(e.target.value)}
               />
               <Box sx={{ mb: 2 }}>
