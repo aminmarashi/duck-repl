@@ -129,8 +129,7 @@ export function TutorialEditor() {
   }
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <FormControlLabel control={<Switch checked={preview} onChange={e => {setPreview(e.target.checked)}} />} label={preview ? 'preview' : 'edit'} />
+    <Box sx={{ flexGrow: 1, display: 'flex', justifyItems: 'flex-start' }}>
       <Grid container spacing={2}>
         <Grid item xs={4}>
           <Item>
@@ -138,6 +137,9 @@ export function TutorialEditor() {
           </Item>
         </Grid>
         <Grid item xs={8}>
+          <Item sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <FormControlLabel sx={{ justifySelf: 'flex-end' }} control={<Switch checked={preview} onChange={e => { setPreview(e.target.checked) }} />} label={preview ? 'preview' : 'edit'} />
+          </Item>
           <Item>
             {
               activeStep === steps.length

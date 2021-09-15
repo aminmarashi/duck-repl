@@ -7,7 +7,7 @@ export function Reporter({ hints, report }: { hints: string[], report: Report })
   const { total, failures } = report;
   const successfulCount = total - failures.length;
   return (
-    <Stack sx={{ width: '100%' }} spacing={2}>
+    <Stack sx={{ width: '100%', maxHeight: '300px', overflow: 'scroll' }} spacing={2}>
       <>
         {
           successfulCount > 0 ?

@@ -21,7 +21,7 @@ export function SideBar({ steps, activeStep, activeStepChanged }: { steps: any[]
   };
 
   return (
-    <Box sx={{ maxWidth: 400 }}>
+    <Box sx={{ maxWidth: 400, maxHeight: 500, overflow: 'scroll' }}>
       <Stepper activeStep={activeStep} orientation="vertical">
         {steps.map((step, index) => (
           <Step key={`step_${index}`}>
