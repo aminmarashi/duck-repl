@@ -11,6 +11,8 @@ import { SideBar } from './SideBar';
 import initialSteps from './steps.json';
 import { downloadSteps } from './utils';
 import { Database } from './Database';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Switch from '@mui/material/Switch';
 
 const Item = styled(Paper)(({ theme }) => ({
   ...theme.typography.body2,
@@ -23,9 +25,10 @@ const invalidReport = { total: 0, failures: [] };
 
 export function TutorialEditor() {
   const [activeStep, setActiveStep] = useState(0);
-  const [steps, setSteps] = useState(initialSteps)
+  const [steps, setSteps] = useState(initialSteps);
   const [codes, setCodes] = useState(steps.map(s => s.code));
   const [report, setReport] = useState<{total: number, failures: any[]}>(invalidReport);
+  const [preview, setPreview] = useState(false);
   const tester = new Tester({ report: setReport });
 
   useEffect(() => {
@@ -127,10 +130,11 @@ export function TutorialEditor() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
+      <FormControlLabel control={<Switch checked={preview} onChange={e => {setPreview(e.target.checked)}} />} label={preview ? 'preview' : 'edit'} />
       <Grid container spacing={2}>
         <Grid item xs={4}>
           <Item>
-            <SideBar steps={steps} activeStep={activeStep} activeStepChanged={activeStepChanged} createStep={createStep} removeStep={removeStep} onTitleChange={onTitleChange} onDescriptionChange={onDescriptionChange} />
+            <SideBar preview={preview} steps={steps} activeStep={activeStep} activeStepChanged={activeStepChanged} createStep={createStep} removeStep={removeStep} onTitleChange={onTitleChange} onDescriptionChange={onDescriptionChange} />
           </Item>
         </Grid>
         <Grid item xs={8}>
@@ -144,7 +148,7 @@ export function TutorialEditor() {
           <Item>
             {
               report !== invalidReport
-                ? <Reporter report={report} hints={steps[activeStep].hints} onHintChanged={updateHints} />
+                ? <Reporter preview={preview} report={report} hints={steps[activeStep].hints} onHintChanged={updateHints} />
                 : <></>
             }
           </Item>

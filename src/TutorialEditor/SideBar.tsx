@@ -10,7 +10,7 @@ import Input from '@mui/material/Input';
 import ButtonGroup from '@mui/material/ButtonGroup';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 
-export function SideBar({ steps, activeStep, activeStepChanged, createStep, removeStep, onTitleChange, onDescriptionChange }: { steps: any[], activeStep: number, activeStepChanged: (activeStep: number) => any, createStep: () => void, removeStep: () => void, onTitleChange: (label: string) => void, onDescriptionChange: (description: string) => void }) {
+export function SideBar({ preview, steps, activeStep, activeStepChanged, createStep, removeStep, onTitleChange, onDescriptionChange }: { preview: boolean, steps: any[], activeStep: number, activeStepChanged: (activeStep: number) => any, createStep: () => void, removeStep: () => void, onTitleChange: (label: string) => void, onDescriptionChange: (description: string) => void }) {
   const handleNext = () => {
     activeStepChanged(activeStep + 1);
   };
@@ -35,16 +35,20 @@ export function SideBar({ steps, activeStep, activeStepChanged, createStep, remo
                 ) : null
               }
             >
-              <Input disabled={activeStep !== index} value={step.title} onChange={e => onTitleChange(e.target.value)}/>
+              {
+                preview ? step.title : <Input disabled={activeStep !== index} value={step.title} onChange={e => onTitleChange(e.target.value)}/>
+              }
             </StepLabel>
             <StepContent>
-              <TextareaAutosize
+              {
+              preview ? step.description : <TextareaAutosize
                 aria-label="minimum height"
                 minRows={3}
                 value={step.description}
                 style={{ width: '75%' }}
                 onChange={e => onDescriptionChange(e.target.value)}
               />
+              }
               <Box sx={{ mb: 2 }}>
                 <Button
                   variant="contained"

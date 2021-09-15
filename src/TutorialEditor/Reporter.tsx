@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack';
 import Input from '@mui/material/Input';
 import { Report } from './types';
 
-export function Reporter({ hints, report, onHintChanged }: { hints: string[], report: Report, onHintChanged: (hint: string, index: number) => void }) {
+export function Reporter({ hints, report, onHintChanged, preview }: { preview: boolean, hints: string[], report: Report, onHintChanged: (hint: string, index: number) => void }) {
   const { total, failures } = report;
   const successfulCount = total - failures.length;
   return (
@@ -23,7 +23,7 @@ export function Reporter({ hints, report, onHintChanged }: { hints: string[], re
           isKnown ?
             <Alert key={index} severity="warning">
               < AlertTitle > {`Test ${index + 1} failed`}</AlertTitle>
-              {error.message} — <strong><Input value={hints[index]} onChange={e => onHintChanged(e.target.value, index)}/></strong>
+              {error.message} — <strong>{preview ? hints[index] : <Input value={hints[index]} onChange={e => onHintChanged(e.target.value, index)}/>}</strong>
             </Alert > :
             <Alert key={index} severity="error">
               <AlertTitle>{`${index + 1} Unexpected error`}</AlertTitle>
