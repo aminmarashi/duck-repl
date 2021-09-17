@@ -1,6 +1,6 @@
-# Getting Started with Create React App
+# Duck REPL
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project is created to make it easier for me to write my interactive blog posts, if you are interested to see them in action, take a look at [rubberduck.so](https://rubberduck.so)
 
 ## Available Scripts
 
