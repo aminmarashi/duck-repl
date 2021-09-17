@@ -6,6 +6,7 @@ import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import BackspaceIcon from '@mui/icons-material/Backspace';
+import Typography from '@mui/material/Typography';
 import { Reporter } from './Reporter';
 import { CodeEditor } from './CodeEditor';
 import { Tester } from './Tester';
@@ -38,6 +39,7 @@ export function Tutorial({ steps, initialStep }: { steps: any[], initialStep: nu
         test();
       }
     }, false);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function activeStepChanged(activeStep: number) {
@@ -89,7 +91,9 @@ export function Tutorial({ steps, initialStep }: { steps: any[], initialStep: nu
                       >
                         test
                       </Button>
-                      or press <kbd>Shift</kbd> + <kbd>enter</kbd>
+                      <Typography sx={{ p: 1 }} display="block" variant="button">
+                        or press <kbd>Shift</kbd> + <kbd>enter</kbd>
+                      </Typography>
                     </Grid>
                     <Grid item xs={4} display="flex" justifyContent="flex-end">
                       <Button

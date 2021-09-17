@@ -4,6 +4,10 @@ import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import InfoIcon from '@mui/icons-material/Info';
+import SaveIcon from '@mui/icons-material/Save';
 import { Reporter } from './Reporter';
 import { CodeEditor } from './CodeEditor';
 import { Tester } from './Tester';
@@ -35,10 +39,11 @@ export function TutorialEditor() {
     Database.load('steps', setSteps);
     Database.load('codes', setCodes);
     document.addEventListener('keyup', (e) => {
-      if (e.shiftKey && e.key === 'ArrowDown') {
+      if (e.shiftKey && e.key === 'Enter') {
         test();
       }
     }, false);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -149,7 +154,36 @@ export function TutorialEditor() {
             {
               activeStep === steps.length
                 ? <div>🎉</div>
-                : <CodeEditor code={codes[activeStep]} onCodeChanged={code => updateCodes(code, activeStep)} />
+                : <>
+                  <CodeEditor code={codes[activeStep]} onCodeChanged={code => updateCodes(code, activeStep)} />
+                  <Grid container>
+                    <Grid item xs={8} display="flex" justifyContent="flex-start">
+                      <Button
+                        startIcon={<PlayArrowIcon color="primary" />}
+                        onClick={() => test(false)}
+                      >
+                        test
+                      </Button>
+                      <Typography sx={{ p: 1 }} display="block" variant="button">
+                        or press <kbd>Shift</kbd> + <kbd>enter</kbd>
+                      </Typography>
+                      <Button
+                        startIcon={<InfoIcon color="primary" />}
+                        onClick={showHints}
+                      >
+                        show hints
+                      </Button>
+                    </Grid>
+                    <Grid item xs={4} display="flex" justifyContent="flex-end">
+                      <Button
+                        startIcon={<SaveIcon color="primary" />}
+                        onClick={exportSteps}
+                      >
+                        export
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </>
             }
           </Item>
           <Item>
@@ -160,33 +194,6 @@ export function TutorialEditor() {
             }
           </Item>
         </Grid>
-        <Grid item xs={6}></Grid>
-        <Grid item xs={2} margin={1}>
-          <Button
-            variant="contained"
-            onClick={() => exportSteps()}
-            sx={{ mt: 1, mr: 1 }}
-          >
-            export
-          </Button>
-        </Grid>
-        <Grid item xs={3} margin={1}>
-          <Button
-            variant="contained"
-            onClick={() => showHints()}
-            sx={{ mt: 1, mr: 1 }}
-          >
-            show hints
-          </Button>
-          <Button
-            variant="contained"
-            onClick={() => test()}
-            sx={{ mt: 1, mr: 1 }}
-          >
-            test
-          </Button>
-        </Grid>
-        <Grid item xs={1}></Grid>
       </Grid>
     </Box>
   );
