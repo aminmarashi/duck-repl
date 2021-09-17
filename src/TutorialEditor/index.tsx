@@ -34,6 +34,11 @@ export function TutorialEditor() {
   useEffect(() => {
     Database.load('steps', setSteps);
     Database.load('codes', setCodes);
+    document.addEventListener('keyup', (e) => {
+      if (e.shiftKey && e.key === 'ArrowDown') {
+        test();
+      }
+    }, false);
   }, []);
 
   useEffect(() => {

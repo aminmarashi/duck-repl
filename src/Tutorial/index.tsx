@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import BackspaceIcon from '@mui/icons-material/Backspace';
 import { Reporter } from './Reporter';
 import { CodeEditor } from './CodeEditor';
 import { Tester } from './Tester';
@@ -18,7 +20,9 @@ const Item = styled(Paper)(({ theme }) => ({
 
 const invalidReport = { total: 0, failures: [] };
 
-export function Tutorial({ steps, initialStep }: { steps: any[], initialStep: number }) {
+export function Tutorial({ steps, initialStep }: { steps: any[], initialStep: number | undefined }) {
+  const isMinimal = initialStep !== undefined;
+  initialStep = initialStep || 0;
   if (initialStep > steps.length) {
     throw Error(`activeStep: ${initialStep} cannot be more than the length of steps`);
   }
@@ -27,12 +31,21 @@ export function Tutorial({ steps, initialStep }: { steps: any[], initialStep: nu
   const [report, setReport] = useState(invalidReport);
   const tester = new Tester({ report: setReport });
 
+  useEffect(() => {
+    document.addEventListener('keyup', (e) => {
+      debugger;
+      if (e.shiftKey && e.key === 'Enter') {
+        test();
+      }
+    }, false);
+  }, []);
+
   function activeStepChanged(activeStep: number) {
     setReport(invalidReport);
     setActiveStep(activeStep);
   }
 
-  function test(activeStep: number) {
+  function test() {
     if (activeStep >= codes.length) return;
     tester.run(codes[activeStep]);
   }
@@ -44,7 +57,7 @@ export function Tutorial({ steps, initialStep }: { steps: any[], initialStep: nu
     setCodes(newCodes);
   }
 
-  function reset(activeStep: number) {
+  function reset() {
     if (activeStep >= codes.length) return;
     setReport(invalidReport);
     const code = steps[activeStep].code;
@@ -54,17 +67,40 @@ export function Tutorial({ steps, initialStep }: { steps: any[], initialStep: nu
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
-        <Grid item xs={4}>
-          <Item>
-            <SideBar steps={steps} activeStep={activeStep} activeStepChanged={activeStepChanged} />
-          </Item>
-        </Grid>
-        <Grid item xs={8}>
+        {
+          !isMinimal && <Grid item xs={4}>
+            <Item>
+              <SideBar steps={steps} activeStep={activeStep} activeStepChanged={activeStepChanged} />
+            </Item>
+          </Grid>
+        }
+        <Grid item xs={isMinimal ? 12 : 8}>
           <Item>
             {
               activeStep === steps.length
                 ? <div>🎉</div>
-                : <CodeEditor code={codes[activeStep]} onCodeChanged={code => updateCodes(code, activeStep)} />
+                : <>
+                  <CodeEditor code={codes[activeStep]} onCodeChanged={code => updateCodes(code, activeStep)} />
+                  <Grid container>
+                    <Grid item xs={8} display="flex" justifyContent="flex-start">
+                      <Button
+                        startIcon={<PlayArrowIcon color="primary" />}
+                        onClick={test}
+                      >
+                        test
+                      </Button>
+                      or press <kbd>Shift</kbd> + <kbd>enter</kbd>
+                    </Grid>
+                    <Grid item xs={4} display="flex" justifyContent="flex-end">
+                      <Button
+                        startIcon={<BackspaceIcon color="primary" />}
+                        onClick={reset}
+                      >
+                        reset changes
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </>
             }
           </Item>
           <Item>
@@ -75,26 +111,6 @@ export function Tutorial({ steps, initialStep }: { steps: any[], initialStep: nu
             }
           </Item>
         </Grid>
-        <Grid item xs={9}></Grid>
-        <Grid item xs={1} margin={1}>
-          <Button
-            variant="contained"
-            onClick={() => reset(activeStep)}
-            sx={{ mt: 1, mr: 1 }}
-          >
-            reset
-          </Button>
-        </Grid>
-        <Grid item xs={1} margin={1}>
-          <Button
-            variant="contained"
-            onClick={() => test(activeStep)}
-            sx={{ mt: 1, mr: 1 }}
-          >
-            test
-          </Button>
-        </Grid>
-        <Grid item xs={1}></Grid>
       </Grid>
     </Box>
   );
