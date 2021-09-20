@@ -50,5 +50,8 @@
       "last 1 safari version"
     ]
   },
+  "publishConfig": {
+    "@YOUR-USERNAME:registry": "https://npm.pkg.github.com"
+  },
   "devDependencies": {}
 }
