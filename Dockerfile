@@ -1,5 +1,5 @@
 FROM node:14
-COPY package* tsconfig.json /tmp
+COPY package* tsconfig.json /tmp/
 COPY src/ /tmp/src
 COPY public/ /tmp/public
 RUN ls /tmp
