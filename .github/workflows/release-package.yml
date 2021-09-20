@@ -17,9 +17,6 @@ on:
 jobs:
   # Push image to GitHub Packages.
   push:
-    # Ensure test job passes before pushing image.
-    needs: test
-
     runs-on: ubuntu-latest
 
     steps:
