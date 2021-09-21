@@ -4,7 +4,6 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
-import BackspaceIcon from '@mui/icons-material/Backspace';
 import Typography from '@mui/material/Typography';
 import { Reporter } from './Reporter';
 import { CodeEditor } from './CodeEditor';
