@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
@@ -12,14 +11,11 @@ import { CodeEditor } from './CodeEditor';
 import { Tester } from './Tester';
 import { SideBar } from './SideBar';
 
-const Item = styled(Paper)(({ theme }) => ({
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
-
 const invalidReport = { total: 0, failures: [] };
+
+const FixedHeightReporter = styled(Reporter)(({ theme }) => ({
+  height: '25vh'
+}));
 
 export function Tutorial({ steps, initialStep }: { steps: any[], initialStep: number | undefined }) {
   const isMinimal = initialStep !== undefined;
@@ -34,12 +30,11 @@ export function Tutorial({ steps, initialStep }: { steps: any[], initialStep: nu
 
   useEffect(() => {
     document.addEventListener('keyup', (e) => {
-      debugger;
       if (e.shiftKey && e.key === 'Enter') {
         test();
       }
     }, false);
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function activeStepChanged(activeStep: number) {
@@ -59,63 +54,42 @@ export function Tutorial({ steps, initialStep }: { steps: any[], initialStep: nu
     setCodes(newCodes);
   }
 
-  function reset() {
-    if (activeStep >= codes.length) return;
-    setReport(invalidReport);
-    const code = steps[activeStep].code;
-    updateCodes(code, activeStep)
-  }
-
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <Grid container spacing={2}>
-        {
-          !isMinimal && <Grid item xs={4}>
-            <Item>
-              <SideBar steps={steps} activeStep={activeStep} activeStepChanged={activeStepChanged} />
-            </Item>
-          </Grid>
-        }
-        <Grid item xs={isMinimal ? 12 : 8}>
-          <Item>
-            {
-              activeStep === steps.length
-                ? <div>🎉</div>
-                : <>
-                  <CodeEditor code={codes[activeStep]} onCodeChanged={code => updateCodes(code, activeStep)} />
-                  <Grid container>
-                    <Grid item xs={8} display="flex" justifyContent="flex-start">
-                      <Button
-                        startIcon={<PlayArrowIcon color="primary" />}
-                        onClick={test}
-                      >
-                        test
-                      </Button>
-                      <Typography sx={{ p: 1 }} display="block" variant="button">
-                        or press <kbd>Shift</kbd> + <kbd>enter</kbd>
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={4} display="flex" justifyContent="flex-end">
-                      <Button
-                        startIcon={<BackspaceIcon color="primary" />}
-                        onClick={reset}
-                      >
-                        reset changes
-                      </Button>
-                    </Grid>
-                  </Grid>
-                </>
-            }
-          </Item>
-          <Item>
-            {
-              report !== invalidReport
-                ? <Reporter report={report} hints={steps[activeStep].hints} />
-                : <></>
-            }
-          </Item>
+    <Grid container spacing={2} sx={{ flexWrap: 'wrap-reverse' }}>
+      {
+        !isMinimal && <Grid item md={4}>
+          <SideBar steps={steps} activeStep={activeStep} activeStepChanged={activeStepChanged} />
         </Grid>
+      }
+      <Grid item md={isMinimal ? 12 : 8}>
+        {
+          activeStep === steps.length
+            ? <div>🎉</div>
+            : <>
+              <Box height={{ height: 'calc(75vh - 40px)' }}>
+                <CodeEditor code={codes[activeStep]} onCodeChanged={code => updateCodes(code, activeStep)} />
+              </Box>
+              <Grid container>
+                <Grid item xs={8} display="flex" justifyContent="flex-start">
+                  <Button
+                    startIcon={<PlayArrowIcon color="primary" />}
+                    onClick={test}
+                  >
+                    test
+                  </Button>
+                  <Typography sx={{ p: 1 }} display="block" variant="button">
+                    or press <kbd>Shift</kbd> + <kbd>enter</kbd>
+                  </Typography>
+                </Grid>
+              </Grid>
+            </>
+        }
+        {
+          report !== invalidReport
+            ? <FixedHeightReporter report={report} hints={steps[activeStep].hints} />
+            : <></>
+        }
       </Grid>
-    </Box>
+    </Grid>
   );
 }

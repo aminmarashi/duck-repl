@@ -7,10 +7,9 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Input from '@mui/material/Input';
-import ButtonGroup from '@mui/material/ButtonGroup';
 import TextareaAutosize from '@mui/material/TextareaAutosize';
 
-export function SideBar({ preview, steps, activeStep, activeStepChanged, createStep, removeStep, onTitleChange, onDescriptionChange }: { preview: boolean, steps: any[], activeStep: number, activeStepChanged: (activeStep: number) => any, createStep: () => void, removeStep: () => void, onTitleChange: (label: string) => void, onDescriptionChange: (description: string) => void }) {
+export function SideBar({ preview, steps, activeStep, activeStepChanged, onTitleChange, onDescriptionChange }: { preview: boolean, steps: any[], activeStep: number, activeStepChanged: (activeStep: number) => any, onTitleChange: (label: string) => void, onDescriptionChange: (description: string) => void }) {
   const handleNext = () => {
     activeStepChanged(activeStep + 1);
   };
@@ -77,12 +76,6 @@ export function SideBar({ preview, steps, activeStep, activeStepChanged, createS
           </Button>
         </Paper>
       )}
-      <Box sx={{ mb: 2 }}>
-        <ButtonGroup variant="outlined" sx={{ mt: 1, mr: 1 }}>
-          <Button onClick={removeStep}> - </Button>
-          <Button onClick={createStep}> + </Button>
-        </ButtonGroup>
-      </Box>
     </Box>
   );
 }

@@ -5,6 +5,7 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+import ButtonGroup from '@mui/material/ButtonGroup';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import InfoIcon from '@mui/icons-material/Info';
 import SaveIcon from '@mui/icons-material/Save';
@@ -18,14 +19,11 @@ import { Database } from './Database';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Switch from '@mui/material/Switch';
 
-const Item = styled(Paper)(({ theme }) => ({
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-}));
-
 const invalidReport = { total: 0, failures: [] };
+
+const FixedHeightReporter = styled(Reporter)(({ theme }) => ({
+  height: '25vh'
+}));
 
 export function TutorialEditor() {
   const [activeStep, setActiveStep] = useState(0);
@@ -142,57 +140,57 @@ export function TutorialEditor() {
     <Box sx={{ flexGrow: 1, display: 'flex', justifyItems: 'flex-start' }}>
       <Grid container spacing={2}>
         <Grid item xs={4}>
-          <Item>
-            <SideBar preview={preview} steps={steps} activeStep={activeStep} activeStepChanged={activeStepChanged} createStep={createStep} removeStep={removeStep} onTitleChange={onTitleChange} onDescriptionChange={onDescriptionChange} />
-          </Item>
+          <SideBar preview={preview} steps={steps} activeStep={activeStep} activeStepChanged={activeStepChanged} onTitleChange={onTitleChange} onDescriptionChange={onDescriptionChange} />
+          <Box sx={{ mb: 2, display: 'flex' }}>
+            <FormControlLabel sx={{ flexGrow: 2, m: 1 }} control={<Switch checked={preview} onChange={e => { setPreview(e.target.checked) }} />} label={preview ? 'preview' : 'edit'} />
+            <ButtonGroup variant="outlined" sx={{ mt: 1, mr: 1, flexGrow: 1 }}>
+              <Button onClick={removeStep}> - </Button>
+              <Button onClick={createStep}> + </Button>
+            </ButtonGroup>
+          </Box>
         </Grid>
         <Grid item xs={8}>
-          <Item sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <FormControlLabel sx={{ justifySelf: 'flex-end' }} control={<Switch checked={preview} onChange={e => { setPreview(e.target.checked) }} />} label={preview ? 'preview' : 'edit'} />
-          </Item>
-          <Item>
-            {
-              activeStep === steps.length
-                ? <div>🎉</div>
-                : <>
+          {
+            activeStep === steps.length
+              ? <div>🎉</div>
+              : <>
+                <Box height={{ height: 'calc(75vh - 40px)' }}>
                   <CodeEditor code={codes[activeStep]} onCodeChanged={code => updateCodes(code, activeStep)} />
-                  <Grid container>
-                    <Grid item xs={8} display="flex" justifyContent="flex-start">
-                      <Button
-                        startIcon={<PlayArrowIcon color="primary" />}
-                        onClick={() => test(false)}
-                      >
-                        test
-                      </Button>
-                      <Typography sx={{ p: 1 }} display="block" variant="button">
-                        or press <kbd>Shift</kbd> + <kbd>enter</kbd>
-                      </Typography>
-                      <Button
-                        startIcon={<InfoIcon color="primary" />}
-                        onClick={showHints}
-                      >
-                        show hints
-                      </Button>
-                    </Grid>
-                    <Grid item xs={4} display="flex" justifyContent="flex-end">
-                      <Button
-                        startIcon={<SaveIcon color="primary" />}
-                        onClick={exportSteps}
-                      >
-                        export
-                      </Button>
-                    </Grid>
+                </Box>
+                <Grid container>
+                  <Grid item xs={8} display="flex" justifyContent="flex-start">
+                    <Button
+                      startIcon={<PlayArrowIcon color="primary" />}
+                      onClick={() => test(false)}
+                    >
+                      test
+                    </Button>
+                    <Typography sx={{ p: 1 }} display="block" variant="button">
+                      or press <kbd>Shift</kbd> + <kbd>enter</kbd>
+                    </Typography>
+                    <Button
+                      startIcon={<InfoIcon color="primary" />}
+                      onClick={showHints}
+                    >
+                      show hints
+                    </Button>
                   </Grid>
-                </>
-            }
-          </Item>
-          <Item>
-            {
-              report !== invalidReport
-                ? <Reporter preview={preview} report={report} hints={steps[activeStep].hints} onHintChanged={updateHints} />
-                : <></>
-            }
-          </Item>
+                  <Grid item xs={4} display="flex" justifyContent="flex-end">
+                    <Button
+                      startIcon={<SaveIcon color="primary" />}
+                      onClick={exportSteps}
+                    >
+                      export
+                    </Button>
+                  </Grid>
+                </Grid>
+              </>
+          }
+          {
+            report !== invalidReport
+              ? <FixedHeightReporter preview={preview} report={report} hints={steps[activeStep].hints} onHintChanged={updateHints} />
+              : <></>
+          }
         </Grid>
       </Grid>
     </Box>

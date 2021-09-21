@@ -5,7 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 const searchParams = Array.from(new URLSearchParams(window.location.search));
-const options = searchParams.reduce((accumulator, param: [string, string]) => {
+const options = searchParams.reduce<{page?: number, isEditMode: boolean}>((accumulator, param: [string, string]) => {
   if (param[0] === 'page') {
     return {
       ...accumulator,
@@ -19,7 +19,7 @@ const options = searchParams.reduce((accumulator, param: [string, string]) => {
     };
   }
   return accumulator
-}, { page: 1, isEditMode: false });
+}, { page: undefined, isEditMode: false });
 
 ReactDOM.render(
   <React.StrictMode>
