@@ -24,7 +24,7 @@ const FixedHeightReporter = styled(Reporter)(({ theme }) => ({
   height: '25vh'
 }));
 
-export function TutorialEditor() {
+export function TutorialEditor({ theme }: { theme: string }) {
   const [activeStep, setActiveStep] = useState(0);
   const [steps, setSteps] = useState(initialSteps);
   const [codes, setCodes] = useState(steps.map(s => s.code));
@@ -154,7 +154,7 @@ export function TutorialEditor() {
               ? <div>🎉</div>
               : <>
                 <Box height={{ height: 'calc(75vh - 40px)' }}>
-                  <CodeEditor code={codes[activeStep]} onCodeChanged={code => updateCodes(code, activeStep)} />
+                  <CodeEditor theme={theme} code={codes[activeStep]} onCodeChanged={code => updateCodes(code, activeStep)} />
                 </Box>
                 <Grid container>
                   <Grid item xs={8} display="flex" justifyContent="flex-start">
